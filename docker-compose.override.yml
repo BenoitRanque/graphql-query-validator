@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  business-logic:
+    image: business-logic:dev
+    build:
+      context: ./graphql-query-validator
+      args:
+        NODE_ENV: development
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./graphql-query-validator/src:/usr/app/src

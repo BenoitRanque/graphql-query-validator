@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  graphql-query-validator:
+    image: graphql-query-validator:prod
+    build:
+      context: ./graphql-query-validator
+      args:
+        NODE_ENV: production
+    ports:
+      - "4000:4000"
+    restart: always
+    volumes:
+      - ./graphql-query-validator/logs:/usr/app/logs
+    environment:
+      NODE_ENV: production
+      PORT: 4000 # internal port used by the container
+      # proxy target. if absent, will log errors and respond with results instead of proxing the requests
+      PROXY_TARGET_URL: ${PROXY_TARGET_URL}
+      # endpoint of the graphql schema to be used in validation
+      GRAPHQL_SCHEMA_URL: ${GRAPHQL_HASURA_ENDPOINT}
+      # auth headers used to access the graphql schema. must be a valid json string
+      GRAPHQL_SCHEMA_HEADERS: |
+        {
+          "x-hasura-admin-secret": "${GRAPHQL_HASURA_ADMIN_SECRET}"
+        }
+      # output directory. default value "logs"
+      OUTPUT_DIRECTORY: logs
